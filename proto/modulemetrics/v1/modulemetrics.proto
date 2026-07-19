@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package module.metrics.v1;
+
+import "opentelemetry/proto/collector/metrics/v1/metrics_service.proto";
+import "google/protobuf/timestamp.proto";
+import "opentelemetry/proto/resource/v1/resource.proto";
+
+option go_package = "metricservice/gen/modulemetrics/v1;modulemetricsv1";
+
+service ModuleMetricsService {
+    rpc Export(opentelemetry.proto.collector.metrics.v1.ExportMetricsServiceRequest) returns (ExportResponse);
+    rpc SendLogs(SendLogsRequest) returns (SendLogsResponse);
+}
+
+message ExportResponse {
+    repeated Command commands = 1;
+}
+
+message Command{
+    string id = 1;
+
+    oneof action{
+        SendLogsCommand send_logs = 2;
+        SetMetricsFilterCommand set_metrics_filter = 3;
+    }
+}
+
+message SendLogsCommand {
+    google.protobuf.Timestamp since = 1;
+    google.protobuf.Timestamp until = 2;
+}
+
+message SetMetricsFilterCommand{
+    repeated string metric_names = 1;
+}
+
+message SendLogsRequest {
+  opentelemetry.proto.resource.v1.Resource resource = 1;
+  repeated LogEntry entries = 2;
+}
+
+message LogEntry {
+  google.protobuf.Timestamp time = 1;
+  string level = 2;
+  string line = 3;
+}
+
+message SendLogsResponse {}

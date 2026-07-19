@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+  <Protobuf Include="..\..\proto\opentelemetry\proto\common\v1\common.proto" GrpcServices="None" ProtoRoot="..\..\proto" />
+  <Protobuf Include="..\..\proto\opentelemetry\proto\resource\v1\resource.proto" GrpcServices="None" ProtoRoot="..\..\proto" />
+  <Protobuf Include="..\..\proto\opentelemetry\proto\metrics\v1\metrics.proto" GrpcServices="None" ProtoRoot="..\..\proto" />
+  <Protobuf Include="..\..\proto\opentelemetry\proto\collector\metrics\v1\metrics_service.proto" GrpcServices="None" ProtoRoot="..\..\proto" />
+  <Protobuf Include="..\..\proto\modulemetrics\v1\modulemetrics.proto" GrpcServices="Server" ProtoRoot="..\..\proto" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.79" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
+    <PackageReference Include="Npgsql" Version="10.0.3" />
+  </ItemGroup>
+
+</Project>
