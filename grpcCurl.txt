@@ -1,0 +1,29 @@
+grpcurl -plaintext \
+  -import-path proto \
+  -proto proto/modulemetrics/v1/modulemetrics.proto \
+  -d '{
+    "resourceMetrics": [
+      {
+        "resource": {
+          "attributes": [
+            { "key": "license.name", "value": { "stringValue": "test-license-123" } }
+          ]
+        },
+        "scopeMetrics": [
+          {
+            "metrics": [
+              {
+                "name": "cpu.usage",
+                "gauge": {
+                  "dataPoints": [
+                    { "timeUnixNano": "1737000000000000000", "asDouble": 42.5 }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }' \
+  192.168.100.4:8080 module.metrics.v1.ModuleMetricsService/Export
