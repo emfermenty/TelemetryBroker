@@ -4,20 +4,18 @@ public static class IdentityResolver
 {
     public static bool TryResolve(OpenTelemetry.Proto.Resource.V1.Resource? resource, out ModuleIdentity identity)
     {
-        var license = FindAttribute(resource, ResourceAttributeKeys.LicenseName);
-        if (!string.IsNullOrEmpty(license))
+        var serviceName = FindAttribute(resource, ResourceAttributeKeys.ServiceName);
+        if (string.IsNullOrEmpty(serviceName))
         {
-            identity = new ModuleIdentity("license", license);
-            return true;
+            identity = default;
+            return false;
         }
-        var hwid = FindAttribute(resource, ResourceAttributeKeys.Hwid);
-        if (!string.IsNullOrEmpty(hwid))
-        {
-            identity = new ModuleIdentity("hwid", hwid);
-            return true;
-        }
-        identity = default;
-        return false;
+
+        var licenseName = FindAttribute(resource, ResourceAttributeKeys.LicenseName);
+        var kind = string.IsNullOrEmpty(licenseName) ? "hwid" : "license";
+
+        identity = new ModuleIdentity(kind, serviceName);
+        return true;
     }
     private static string? FindAttribute(OpenTelemetry.Proto.Resource.V1.Resource? resource, string key)
     {

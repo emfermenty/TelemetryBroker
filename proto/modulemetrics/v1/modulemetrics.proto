@@ -7,6 +7,7 @@ import "google/protobuf/timestamp.proto";
 import "opentelemetry/proto/resource/v1/resource.proto";
 
 option go_package = "metricservice/gen/modulemetrics/v1;modulemetricsv1";
+option csharp_namespace = "ModuleTelemetry.V1";
 
 service ModuleMetricsService {
     rpc Export(opentelemetry.proto.collector.metrics.v1.ExportMetricsServiceRequest) returns (ExportResponse);

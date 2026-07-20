@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Module.Metrics.V1;
+using ModuleTelemetry.V1;
 
 namespace MetricService.Commands;
 

@@ -6,11 +6,11 @@ using MetricService.Commands;
 using MetricService.Identity.Resolver;
 using MetricService.Logging;
 using MetricService.Storage;
-using Module.Metrics.V1;
+using ModuleTelemetry.V1;
 using OpenTelemetry.Proto.Collector.Metrics.V1;
 using OpenTelemetry.Proto.Common.V1;
 using OpenTelemetry.Proto.Metrics.V1;
-using static Module.Metrics.V1.ModuleMetricsService;
+using static ModuleTelemetry.V1.ModuleMetricsService;
 
 namespace MetricService.Services;
 

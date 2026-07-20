@@ -1,7 +1,0 @@
-obj\Debug\net8.0\modulemetrics\v1/Modulemetrics.cs \
-obj\Debug\net8.0\modulemetrics\v1/ModulemetricsGrpc.cs: ../../proto/opentelemetry/proto/common/v1/common.proto\
- ../../proto/opentelemetry/proto/resource/v1/resource.proto\
- ../../proto/opentelemetry/proto/metrics/v1/metrics.proto\
- ../../proto/opentelemetry/proto/collector/metrics/v1/metrics_service.proto\
- C:/Users/lidm/.nuget/packages/grpc.tools/2.57.0/build/native/include/google/protobuf/timestamp.proto\
- ../../proto/modulemetrics/v1/modulemetrics.proto
