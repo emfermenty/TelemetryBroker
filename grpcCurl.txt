@@ -27,4 +27,4 @@ grpcurl -plaintext \
       }
     ]
   }' \
-  10.4.16.122:8080 module.metrics.v1.ModuleMetricsService/Export
+  10.4.5.176:8081 module.metrics.v1.ModuleMetricsService/Export
