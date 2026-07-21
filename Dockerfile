@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends libgssapi-krb5-
 WORKDIR /app
 COPY --from=build /app .
 
-ENV ASPNETCORE_URLS=http://+:8080
-EXPOSE 8080
+EXPOSE 8080 8082
 
 ENTRYPOINT ["dotnet", "MetricService.dll"]

@@ -33,6 +33,7 @@ services:
       Loki__BaseUrl: "http://loki:3100"
     ports:
       - "8081:8080"
+      - "8082:8082"
     depends_on:
       timescaledb:
         condition: service_healthy

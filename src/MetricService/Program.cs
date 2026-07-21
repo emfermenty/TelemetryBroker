@@ -3,9 +3,16 @@ using MetricService.Commands;
 using MetricService.Logging;
 using MetricService.Services;
 using MetricService.Storage;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(8080, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+    options.ListenAnyIP(8082, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
+});
 
 var connectionString = builder.Configuration.GetConnectionString("Timescale")
     ?? throw new InvalidOperationException("Missing ConnectionStrings:Timescale configuration");
