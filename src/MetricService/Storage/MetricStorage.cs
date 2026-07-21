@@ -47,4 +47,16 @@ public class MetricStorage
 
         await writer.CompleteAsync(ct);
     }
+    public async Task<IReadOnlyList<ModuleInfo>> GetModulesAsync(CancellationToken ct)
+    {
+        await using var connection = await _dataSource.OpenConnectionAsync(ct);
+        var modules = await connection.QueryAsync<ModuleInfo>(new CommandDefinition(
+            """
+            SELECT id AS "Id", kind AS "Kind", first_seen AS "FirstSeen", last_seen AS "LastSeen"
+            FROM modules ORDER BY last_seen DESC
+            """,
+            cancellationToken: ct));
+
+        return modules.ToList();
+    }
 }

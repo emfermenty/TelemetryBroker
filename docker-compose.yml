@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: metricservice
       POSTGRES_PASSWORD: metricservice
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - timescale-data:/var/lib/postgresql/data
       - ./migrations:/docker-entrypoint-initdb.d

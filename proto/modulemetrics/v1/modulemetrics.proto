@@ -45,6 +45,7 @@ message LogEntry {
   google.protobuf.Timestamp time = 1;
   string level = 2;
   string line = 3;
+  map<string, string> labels = 4;
 }
 
 message SendLogsResponse {}

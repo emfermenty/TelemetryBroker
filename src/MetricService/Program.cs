@@ -1,3 +1,4 @@
+using MetricService.Api;
 using MetricService.Commands;
 using MetricService.Logging;
 using MetricService.Services;
@@ -25,6 +26,7 @@ builder.Services.AddGrpc();
 var app = builder.Build();
 
 app.MapGrpcService<ModuleMetricsGrpcService>();
+app.MapAdminEndpoints();
 app.MapGet("/", () => "Communication with gRPC endpoints must be made through a gRPC client.");
 
 app.Run();

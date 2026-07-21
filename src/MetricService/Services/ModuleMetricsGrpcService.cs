@@ -63,7 +63,7 @@ public class ModuleMetricsGrpcService : ModuleMetricsServiceBase
         }
 
         var entries = request.Entries
-            .Select(e => new LokiEntry(ToUnixNano(e.Time), e.Level, e.Line))
+            .Select(e => new LokiEntry(ToUnixNano(e.Time), e.Level, e.Line, e.Labels.ToDictionary(kv => kv.Key, kv => kv.Value)))
             .ToList();
 
         await _lokiClient.PushAsync(identity.Value, entries, context.CancellationToken);
