@@ -22,8 +22,13 @@ builder.Services.AddHttpClient<LokiClient>(client =>
 });
 
 builder.Services.AddGrpc();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapGrpcService<ModuleMetricsGrpcService>();
 app.MapAdminEndpoints();
