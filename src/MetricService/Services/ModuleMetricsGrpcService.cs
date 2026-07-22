@@ -4,7 +4,6 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using MetricService.Commands;
 using MetricService.Identity.Resolver;
-using MetricService.Logging;
 using MetricService.Storage;
 using ModuleTelemetry.V1;
 using OpenTelemetry.Proto.Collector.Metrics.V1;
@@ -18,14 +17,14 @@ public class ModuleMetricsGrpcService : ModuleMetricsServiceBase
 {
     private readonly MetricStorage _storage;
     private readonly CommandQueue _commandQueue;
-    private readonly LokiClient _lokiClient;
+    private readonly LogStorage _logStorage;
     private readonly ILogger<ModuleMetricsGrpcService> _logger;
 
-    public ModuleMetricsGrpcService(MetricStorage storage, CommandQueue commandQueue, ILogger<ModuleMetricsGrpcService> logger, LokiClient lokiClient)
+    public ModuleMetricsGrpcService(MetricStorage storage, CommandQueue commandQueue, ILogger<ModuleMetricsGrpcService> logger, LogStorage logStorage)
     {
         _storage = storage;
         _commandQueue = commandQueue;
-        _lokiClient = lokiClient;
+        _logStorage = logStorage;
         _logger = logger;
     }
 
@@ -62,11 +61,11 @@ public class ModuleMetricsGrpcService : ModuleMetricsServiceBase
             throw new RpcException(new Status(StatusCode.InvalidArgument, "No license.name or hwid attribute found"));
         }
 
-        var entries = request.Entries
-            .Select(e => new LokiEntry(ToUnixNano(e.Time), e.Level, e.Line, e.Labels.ToDictionary(kv => kv.Key, kv => kv.Value)))
+        var lines = request.Entries
+            .Select(e => new LogLine(e.Time.ToDateTime(), e.Level, e.Line, e.Labels.ToDictionary(kv => kv.Key, kv => kv.Value)))
             .ToList();
 
-        await _lokiClient.PushAsync(identity.Value, entries, context.CancellationToken);
+        await _logStorage.WriteLogLinesAsync(identity.Value, lines, context.CancellationToken);
 
         return new SendLogsResponse();
     }

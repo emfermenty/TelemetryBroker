@@ -16,13 +16,20 @@ services:
       timeout: 5s
       retries: 10
 
-  loki:
-    image: grafana/loki:3.0.0
-    command: -config.file=/etc/loki/local-config.yaml
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.8
+    environment:
+      CLICKHOUSE_SKIP_USER_SETUP: 1
     ports:
-      - "3100:3100"
+      - "8123:8123"
     volumes:
-      - loki-data:/loki
+      - clickhouse-data:/var/lib/clickhouse
+      - ./migrations-clickhouse:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8123/ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   metricservice:
     build:
@@ -30,16 +37,16 @@ services:
       dockerfile: Dockerfile
     environment:
       ConnectionStrings__Timescale: "Host=timescaledb;Port=5432;Database=metricservice;Username=metricservice;Password=metricservice"
-      Loki__BaseUrl: "http://loki:3100"
+      ConnectionStrings__ClickHouse: "Host=clickhouse;Port=8123;Username=default;Password=;Database=default"
     ports:
       - "8081:8080"
       - "8082:8082"
     depends_on:
       timescaledb:
         condition: service_healthy
-      loki:
-        condition: service_started
+      clickhouse:
+        condition: service_healthy
 
 volumes:
   timescale-data:
-  loki-data:
+  clickhouse-data:

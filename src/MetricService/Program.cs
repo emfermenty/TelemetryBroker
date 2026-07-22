@@ -1,6 +1,5 @@
 using MetricService.Api;
 using MetricService.Commands;
-using MetricService.Logging;
 using MetricService.Services;
 using MetricService.Storage;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -16,17 +15,13 @@ builder.WebHost.ConfigureKestrel(options =>
 
 var connectionString = builder.Configuration.GetConnectionString("Timescale")
     ?? throw new InvalidOperationException("Missing ConnectionStrings:Timescale configuration");
+var clickHouseConnectionString = builder.Configuration.GetConnectionString("ClickHouse")
+    ?? throw new InvalidOperationException("Missing ConnectionStrings:ClickHouse configuration");
 
 builder.Services.AddSingleton(new NpgsqlDataSourceBuilder(connectionString).Build());
 builder.Services.AddSingleton<MetricStorage>();
 builder.Services.AddSingleton<CommandQueue>();
-
-builder.Services.AddHttpClient<LokiClient>(client =>
-{
-    var lokiBaseUrl = builder.Configuration["Loki:BaseUrl"]
-        ?? throw new InvalidOperationException("Missing Loki:BaseUrl configuration");
-    client.BaseAddress = new Uri(lokiBaseUrl);
-});
+builder.Services.AddSingleton(new LogStorage(clickHouseConnectionString));
 
 builder.Services.AddGrpc();
 builder.Services.AddEndpointsApiExplorer();
