@@ -31,6 +31,17 @@ public static class AdminEndpoints
 
             return Results.Accepted();
         });
+
+        app.MapGet("/api/modules/{moduleId}/logs/export", async (string moduleId, DateTime since, DateTime until, LogStorage logStorage, CancellationToken ct) =>
+        {
+        var logs = await logStorage.QueryLogsAsync(moduleId, since, until, ct);
+        var fileName = $"{moduleId}_{since:yyyyMMddHHmmss}_{until:yyyyMMddHHmmss}.json";
+
+        return Results.File(
+            System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(logs),
+            contentType: "application/json",
+            fileDownloadName: fileName);
+        });
     }
 }
 
